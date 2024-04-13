@@ -16,22 +16,27 @@ public class Voo extends Registro {
     }
 
     public String getAeroportoOrigem() {
+
         return aeroportoOrigem;
     }
 
     public String getAeroportoDestino() {
+
         return aeroportoDestino;
     }
 
     public String getCompanhiaAerea() {
+
         return companhiaAerea;
     }
 
     public int getNumeroVoo() {
+
         return numeroVoo;
     }
 
     public String obterIdVoo(){
+
         return companhiaAerea + ", " + numeroVoo;
     }
 }

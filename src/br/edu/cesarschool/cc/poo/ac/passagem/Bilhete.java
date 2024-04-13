@@ -11,7 +11,7 @@ public class Bilhete extends Registro {
     private Voo voo;
     private double preco;
     private double pagamentoEmPontos;
-    private java.time.LocalDateTime dataHora;
+    private LocalDateTime dataHora;
 
     public Bilhete(Cliente cliente, Voo voo, double preco, double pagamentoEmPontos, LocalDateTime dataHora) {
         this.cliente = cliente;

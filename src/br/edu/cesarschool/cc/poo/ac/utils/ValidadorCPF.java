@@ -1,10 +1,9 @@
 package br.edu.cesarschool.cc.poo.ac.utils;
 
 import java.lang.String;
-public class ValidadorCPF extends StringUtils {
+public class ValidadorCPF {
     //TODO: construtor não funciona com as especificações passadas
     private ValidadorCPF() {
-        super();
     }
 
     public static boolean isCpfValido(String cpf) {

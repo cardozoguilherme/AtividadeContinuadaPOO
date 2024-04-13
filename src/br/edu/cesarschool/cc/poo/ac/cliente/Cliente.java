@@ -17,10 +17,6 @@ public class Cliente extends Registro {
         return cpf;
     }
 
-//    public void setCpf(String cpf) {
-//        this.cpf = cpf;
-//    }
-
     public String getNome() {
         return nome;
     }
@@ -30,12 +26,9 @@ public class Cliente extends Registro {
     }
 
     public double getSaldoPontos() {
+
         return saldoPontos;
     }
-
-//    public void setSaldoPontos(double saldoPontos) {
-//        this.saldoPontos = saldoPontos;
-//    }
 
     public void creditarPontos(double valor){
         saldoPontos += valor;

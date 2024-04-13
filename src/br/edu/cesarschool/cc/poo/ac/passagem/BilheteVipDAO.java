@@ -14,7 +14,8 @@ public class BilheteVipDAO {
     }
 
     public Voo buscar(String numeroBilhete) {
-        return (Voo) cadastro.buscar(numeroBilhete);
+
+        return (Voo)cadastro.buscar(numeroBilhete);
     }
 
     public boolean incluir(BilheteVip bilheteVip) {

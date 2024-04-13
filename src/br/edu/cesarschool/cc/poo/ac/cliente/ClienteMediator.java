@@ -8,7 +8,7 @@ public class ClienteMediator {
 
     private ClienteDAO clienteDao = new ClienteDAO();
 
-    ClienteMediator() {
+    private ClienteMediator() {
     }
 
     public static ClienteMediator obterInstancia() {
@@ -41,6 +41,33 @@ public class ClienteMediator {
 
             if (!resposta) {
                 return "Cliente ja existente";
+            }
+            return null;
+        }
+    }
+
+    /// ATENÇÃO
+    public String alterar(Voo cliente){
+        if (validar(cliente) != null) {
+            return validar(cliente);
+        } else {
+            boolean resposta = clienteDao.alterar(cliente);
+
+            if (!resposta) {
+                return "Cliente inexistente";
+            }
+            return null;
+        }
+    }
+
+    public String excluir(String cpf) {
+        if (!ValidadorCPF.isCpfValido(cpf)) {
+            return "CPF errado";
+        } else {
+            boolean resposta = clienteDao.excluir(cpf);
+
+            if (!resposta) {
+                return "Cliente inexistente";
             }
             return null;
         }
