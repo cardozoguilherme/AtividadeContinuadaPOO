@@ -13,17 +13,17 @@ public class BilheteVipDAO {
         return bilheteVip.gerarNumero();
     }
 
-    public Voo buscar(String numeroBilhete) {
+    public BilheteVip buscar(String numeroBilhete) {
 
-        return (Voo)cadastro.buscar(numeroBilhete);
+        return (BilheteVip)cadastro.buscar(numeroBilhete);
     }
 
     public boolean incluir(BilheteVip bilheteVip) {
         String idUnico = obterIdUnico(bilheteVip);
-        Voo voo = buscar(idUnico);
+        BilheteVip bilVip = buscar(idUnico);
 
-        if (voo != null) {
-            cadastro.incluir(voo, idUnico);
+        if (bilVip != null) {
+            cadastro.incluir(bilVip, idUnico);
             return true;
         }
         return false;
@@ -31,19 +31,19 @@ public class BilheteVipDAO {
 
     public boolean alterar(BilheteVip bilheteVip) {
         String idUnico = obterIdUnico(bilheteVip);
-        Voo voo = buscar(idUnico);
+        BilheteVip bilVip = buscar(idUnico);
 
         if (idUnico != null) {
-            cadastro.alterar(voo, idUnico);
+            cadastro.alterar(bilVip, idUnico);
             return true;
         }
         return false;
     }
 
     public boolean excluir(String numeroBilhete) {
-        Voo voo = buscar(numeroBilhete);
+        BilheteVip bilVip = buscar(numeroBilhete);
 
-        if (voo != null) {
+        if (bilVip != null) {
             cadastro.excluir(numeroBilhete);
             return true;
         }

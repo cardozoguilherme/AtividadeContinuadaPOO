@@ -13,17 +13,17 @@ public class BilheteDAO {
         return bilhete.gerarNumero();
     }
 
-    public Voo buscar(String numeroBilhete) {
+    public Bilhete buscar(String numeroBilhete) {
 
-        return (Voo)cadastro.buscar(numeroBilhete);
+        return (Bilhete)cadastro.buscar(numeroBilhete);
     }
 
     public boolean incluir(Bilhete bilhete) {
         String idUnico = obterIdUnico(bilhete);
-        Voo voo = buscar(idUnico);
+        Bilhete bil = buscar(idUnico);
 
-        if (voo != null) {
-            cadastro.incluir(voo, idUnico);
+        if (bil != null) {
+            cadastro.incluir(bilhete, idUnico);
             return true;
         }
         return false;
@@ -31,19 +31,19 @@ public class BilheteDAO {
 
     public boolean alterar(Bilhete bilhete) {
         String idUnico = obterIdUnico(bilhete);
-        Voo voo = buscar(idUnico);
+        Bilhete bil = buscar(idUnico);
 
-        if (idUnico != null) {
-            cadastro.alterar(voo, idUnico);
+        if (bil != null) {
+            cadastro.alterar(bilhete, idUnico);
             return true;
         }
         return false;
     }
 
     public boolean excluir(String numeroBilhete) {
-        Voo voo = buscar(numeroBilhete);
+        Bilhete bil = buscar(numeroBilhete);
 
-        if (voo != null) {
+        if (bil != null) {
             cadastro.excluir(numeroBilhete);
             return true;
         }

@@ -26,7 +26,6 @@ public class Cliente extends Registro {
     }
 
     public double getSaldoPontos() {
-
         return saldoPontos;
     }
 
