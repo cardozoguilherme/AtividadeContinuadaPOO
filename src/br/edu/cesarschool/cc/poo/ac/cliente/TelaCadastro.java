@@ -31,12 +31,12 @@ public class TelaCadastro {
                 processaInclusao();
             } else if (opcao == 2) {
                 cpf = processaBusca();
-                if (cpf != CPF_DESCONHECIDO) {
+                if (!Objects.equals(cpf, CPF_DESCONHECIDO)) {
                     processaAlteracao(cpf);
                 }
             } else if (opcao == 3) {
                 cpf = processaBusca();
-                if (cpf != CPF_DESCONHECIDO) {
+                if (!Objects.equals(cpf, CPF_DESCONHECIDO)) {
                     processaExclusao(cpf);
                 }
             } else if (opcao == 4) {
