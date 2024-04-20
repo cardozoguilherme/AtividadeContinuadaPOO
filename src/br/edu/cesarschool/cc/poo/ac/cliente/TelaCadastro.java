@@ -1,9 +1,8 @@
 package br.edu.cesarschool.cc.poo.ac.cliente;
 
-package br.edu.cesarschool.cc.poo.telas.modelo;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -14,36 +13,36 @@ import java.util.Scanner;
  * seja!
  *
  */
-public class TelaCliente {
+public class TelaCadastro {
 
-    private static final String DIGITE_O_CODIGO = "Digite o cpf: ";
-    private static final String PRODUTO_NAO_ENCONTRADO = "Produto não encontrado!";
-    private static final int CODIGO_DESCONHECIDO = -1;
+    private static final String DIGITE_O_CPF = "Digite o cpf: ";
+    private static final String CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado!";
+    private static final String CPF_DESCONHECIDO = null;
     private static final Scanner ENTRADA = new Scanner(System.in);
     private static final BufferedReader ENTRADA_STR = new BufferedReader(new InputStreamReader(System.in));
     private ClienteMediator clienteMediator = ClienteMediator.obterInstancia();
 
-    public void inicializaTelasCadastroProduto() {
+    public void inicializaTelasCadastro() {
         while(true) {
-            long codigo = CODIGO_DESCONHECIDO;
+            String cpf = CPF_DESCONHECIDO;
             imprimeMenuPrincipal();
             int opcao = ENTRADA.nextInt();
             if (opcao == 1) {
                 processaInclusao();
             } else if (opcao == 2) {
-                codigo = processaBusca();
-                if (codigo != CODIGO_DESCONHECIDO) {
-                    processaAlteracao(codigo);
+                cpf = processaBusca();
+                if (cpf != CPF_DESCONHECIDO) {
+                    processaAlteracao(cpf);
                 }
             } else if (opcao == 3) {
-                codigo = processaBusca();
-                if (codigo != CODIGO_DESCONHECIDO) {
-                    processaExclusao(codigo);
+                cpf = processaBusca();
+                if (cpf != CPF_DESCONHECIDO) {
+                    processaExclusao(cpf);
                 }
             } else if (opcao == 4) {
                 processaBusca();
             } else if (opcao == 5) {
-                System.out.println("Saindo do cadastro de produtos");
+                System.out.println("Saindo do cadastro de clientes");
                 System.exit(0);
             } else {
                 System.out.println("Opção inválida!!");
@@ -61,64 +60,64 @@ public class TelaCliente {
     }
 
     private void processaInclusao() {
-        Cliente cliente = capturaProduto(null);
+        Cliente cliente = capturaCliente(null);
         String retorno = clienteMediator.incluir(cliente);
         if (retorno == null) {
-            System.out.println("Cliente incluído com sucesso!");
+            System.out.println("Cliente incluído com sucesso");
         } else {
             System.out.println(retorno);
         }
     }
 
     private void processaAlteracao(String cpf) {
-        Cliente cliente = capturaProduto(cpf);
+        Cliente cliente = capturaCliente(cpf);
         String retorno = clienteMediator.alterar(cliente);
         if (retorno == null) {
-            System.out.println("Cliente alterado com sucesso!");
+            System.out.println("Cliente não encontrado");
         } else {
             System.out.println(retorno);
         }
     }
 
-    private long processaBusca() {
-        System.out.print(DIGITE_O_CODIGO);
+    private String processaBusca() {
+        System.out.print(DIGITE_O_CPF);
         String cpf = ENTRADA.nextLine();
-        Cliente produto = clienteMediator.buscar(cpf);
-        if (produto == null) {
-            System.out.println(PRODUTO_NAO_ENCONTRADO);
-            return CODIGO_DESCONHECIDO;
+        Cliente cliente = clienteMediator.buscar(cpf);
+        if (cliente == null) {
+            System.out.println(CLIENTE_NAO_ENCONTRADO);
+            return CPF_DESCONHECIDO;
         } else {
             // Mostrar todos os atributos do Produto!!
-            System.out.println("Código: " + produto.getCodigo());
-            System.out.println("Nome: " + produto.getNome());
-            return codigo;
+            System.out.println("Cpf: " + cliente.getCpf());
+            System.out.println("Nome: " + cliente.getNome());
+            return cpf;
         }
     }
 
     private void processaExclusao(String cpf) {
         String retorno = clienteMediator.excluir(cpf);
         if (retorno == null) {
-            System.out.println("Cliente excluído com sucesso!");
+            System.out.println("Cliente não encontrado");
         } else {
             System.out.println(retorno);
         }
     }
 
-    private Cliente capturaProduto(String cpf) {
+    private Cliente capturaCliente(String cpfDaAlteracao) {
         Cliente cliente = null;
-        long codigo;
-        if (codigoDaAlteracao == CODIGO_DESCONHECIDO) {
-            System.out.print(DIGITE_O_CODIGO);
-            codigo = ENTRADA.nextLong();
+        String cpf;
+        if (Objects.equals(cpfDaAlteracao, CPF_DESCONHECIDO)) {
+            System.out.print(DIGITE_O_CPF);
+            cpf = lerString();
         } else {
-            codigo = codigoDaAlteracao;
+            cpf = cpfDaAlteracao;
         }
-        // Lê todos os atributos do Produto
+        // Lê todos os atributos do cliente
         System.out.print("Digite o nome: ");
         String nome = lerString();
-        // Cria instância de Produto com todos os atributos
-        produto = new Produto(codigo, nome);
-        return produto;
+        // Cria instância de Cliente com todos os atributos
+        cliente = new Cliente(cpf, nome, 0);
+        return cliente;
     }
     private String lerString() {
         try {
