@@ -70,6 +70,6 @@ public class Bilhete extends Registro {
     }
 
     public String gerarNumero() {
-        return cliente.getCpf() + ", " + voo.getNumeroVoo() + ", " + dataHora.getYear() + ", " + dataHora.getMonth() + ", " + dataHora.getDayOfMonth();
+        return cliente.getCpf() + voo.getNumeroVoo() + dataHora.getYear() + dataHora.getMonthValue() + dataHora.getDayOfMonth();
     }
 }

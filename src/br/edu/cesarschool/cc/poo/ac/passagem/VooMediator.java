@@ -27,15 +27,14 @@ public class VooMediator {
     public String validarCiaNumero(String companhiaAerea, int numeroVoo) {
         if (StringUtils.isVaziaOuNula(companhiaAerea) || companhiaAerea.length() != 2) {
             return "CIA aerea errada";
-        } else if (!(numeroVoo < 1000 || numeroVoo > 9999)) {
+        } else if (numeroVoo < 1000 || numeroVoo > 9999) {
             return "Numero voo errado";
         }
         return null;
     }
 
     public String validar(Voo voo){
-        String[] aeroportos = {"GRU, CGH, GIG, SDU, REC, CWB, POA, BSB, SSA, FOR, MAO, SLZ, CNF, BEL, JPA, " +
-                "PNZ, CAU, FEN, SET, NAT, PVH, BVB, FLN, AJU, PMW, MCZ, MCP, VIX, GYN, CGB, CGR, THE, RBR, VCP, RAO"};
+        String[] aeroportos = {"GRU", "CGH", "GIG", "SDU", "REC", "CWB", "POA", "BSB", "SSA", "FOR", "MAO", "SLZ", "CNF", "BEL", "JPA", "PNZ", "CAU", "FEN", "SET", "NAT", "PVH", "BVB", "FLN", "AJU", "PMW", "MCZ", "MCP", "VIX", "GYN", "CGB", "CGR", "THE", "RBR", "VCP", "RAO"};
 
         if (StringUtils.isVaziaOuNula(voo.getAeroportoOrigem()) || !Arrays.asList(aeroportos).contains(voo.getAeroportoOrigem())) {
             return "Aeroporto origem errado";
@@ -45,21 +44,20 @@ public class VooMediator {
             return "Aeroporto origem igual a aeroporto destino";
         }
 
-        validarCiaNumero(voo.getCompanhiaAerea(), voo.getNumeroVoo());
-
-        return null;
+        return validarCiaNumero(voo.getCompanhiaAerea(), voo.getNumeroVoo());
     }
 
     public String incluir(Voo voo) {
-        if (validar(voo) != null) {
-            return validar(voo);
-        } else {
-            boolean resposta = vooDao.incluir(voo);
+        String mensagem = validar(voo); // RETORNA NULL NO testCadVoo6() do TestesAc03
 
-            if (!resposta) {
+        if (mensagem == null) {
+            if (vooDao.incluir(voo) == false) {
                 return "Voo ja existente";
+            } else {
+                return null;
             }
-            return null;
+        } else {
+            return mensagem;
         }
     }
 

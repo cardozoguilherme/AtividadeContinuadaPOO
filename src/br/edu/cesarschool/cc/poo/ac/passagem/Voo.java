@@ -37,6 +37,6 @@ public class Voo extends Registro {
 
     public String obterIdVoo(){
 
-        return companhiaAerea + ", " + numeroVoo;
+        return companhiaAerea + numeroVoo;
     }
 }

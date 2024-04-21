@@ -62,6 +62,46 @@ public class BilheteMediator {
     }
 
     public ResultadoGeracaoBilhete gerarBilhete(String cpf, String ciaAerea, int numeroVoo, double
+            preco, double pagamentoEmPontos, LocalDateTime dataHora) {
+
+        String mensagemDeErro = validar(cpf, ciaAerea, numeroVoo, preco, pagamentoEmPontos, dataHora);
+
+        if (mensagemDeErro != null) {
+            return new ResultadoGeracaoBilhete(null, null, mensagemDeErro);
+        } else {
+            Voo voo = new Voo(null, null, ciaAerea, numeroVoo);
+            String idVoo = voo.obterIdVoo();
+            Voo vooObtido = vooMediator.buscar(idVoo);
+
+            if(vooObtido == null){
+                return new ResultadoGeracaoBilhete(null, null, "Voo nao encontrado");
+            } else {
+                Cliente clienteBuscado = clienteMediator.buscar(cpf);
+
+                if(clienteBuscado == null){
+                    return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
+                } else if(pagamentoEmPontos * 20 > clienteBuscado.getSaldoPontos()) {
+                    return new ResultadoGeracaoBilhete(null, null, "Pontos insuficientes");
+                } else {
+                    Bilhete bilhete = new Bilhete(clienteBuscado, vooObtido, preco, pagamentoEmPontos, dataHora);
+                    clienteBuscado.debitarPontos(pagamentoEmPontos * 20);
+                    clienteBuscado.creditarPontos(bilhete.obterValorPontuacao());
+                    if(!bilheteDao.incluir(bilhete)) {
+                        return new ResultadoGeracaoBilhete(null, null, "Bilhete ja existente");
+                    } else {
+                        String resposta = clienteMediator.alterar(clienteBuscado);
+                        if(resposta != null) {
+                            return new ResultadoGeracaoBilhete(null, null, resposta);
+                        } else {
+                            return new ResultadoGeracaoBilhete(bilhete, null, null);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public ResultadoGeracaoBilhete gerarBilheteVip(String cpf, String ciaAerea, int numeroVoo, double
             preco, double pagamentoEmPontos, LocalDateTime dataHora, double bonusPontuacao) {
         String mensagemDeErro = validar(cpf, ciaAerea, numeroVoo, preco, pagamentoEmPontos, dataHora);
 
