@@ -48,10 +48,10 @@ public class VooMediator {
     }
 
     public String incluir(Voo voo) {
-        String mensagem = validar(voo); // RETORNA NULL NO testCadVoo6() do TestesAc03
+        String mensagem = validar(voo);
 
         if (mensagem == null) {
-            if (vooDao.incluir(voo) == false) {
+            if (!vooDao.incluir(voo)) {
                 return "Voo ja existente";
             } else {
                 return null;

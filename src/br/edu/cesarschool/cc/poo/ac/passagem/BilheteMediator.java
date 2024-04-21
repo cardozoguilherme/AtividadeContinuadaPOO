@@ -47,7 +47,11 @@ public class BilheteMediator {
             return "CPF errado";
         }
 
-        vooMediator.validarCiaNumero(ciaAerea, numeroVoo);
+        String retornoCia = vooMediator.validarCiaNumero(ciaAerea, numeroVoo);
+
+        if(retornoCia != null) {
+            return retornoCia;
+        }
 
         if (preco <= 0) {
             return "Preco errado";
@@ -66,81 +70,96 @@ public class BilheteMediator {
 
         String mensagemDeErro = validar(cpf, ciaAerea, numeroVoo, preco, pagamentoEmPontos, dataHora);
 
-        if (mensagemDeErro != null) {
+        if(mensagemDeErro != null) {
             return new ResultadoGeracaoBilhete(null, null, mensagemDeErro);
-        } else {
-            Voo voo = new Voo(null, null, ciaAerea, numeroVoo);
-            String idVoo = voo.obterIdVoo();
-            Voo vooObtido = vooMediator.buscar(idVoo);
-
-            if(vooObtido == null){
-                return new ResultadoGeracaoBilhete(null, null, "Voo nao encontrado");
-            } else {
-                Cliente clienteBuscado = clienteMediator.buscar(cpf);
-
-                if(clienteBuscado == null){
-                    return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
-                } else if(pagamentoEmPontos * 20 > clienteBuscado.getSaldoPontos()) {
-                    return new ResultadoGeracaoBilhete(null, null, "Pontos insuficientes");
-                } else {
-                    Bilhete bilhete = new Bilhete(clienteBuscado, vooObtido, preco, pagamentoEmPontos, dataHora);
-                    clienteBuscado.debitarPontos(pagamentoEmPontos * 20);
-                    clienteBuscado.creditarPontos(bilhete.obterValorPontuacao());
-                    if(!bilheteDao.incluir(bilhete)) {
-                        return new ResultadoGeracaoBilhete(null, null, "Bilhete ja existente");
-                    } else {
-                        String resposta = clienteMediator.alterar(clienteBuscado);
-                        if(resposta != null) {
-                            return new ResultadoGeracaoBilhete(null, null, resposta);
-                        } else {
-                            return new ResultadoGeracaoBilhete(bilhete, null, null);
-                        }
-                    }
-                }
-            }
         }
+
+        Voo voo = new Voo(null, null, ciaAerea, numeroVoo);
+        String idVoo = voo.obterIdVoo();
+        Voo vooBuscado = vooMediator.buscar(idVoo);
+
+        if (vooBuscado == null) { // !=
+            return new ResultadoGeracaoBilhete(null, null, "Voo nao encontrado");
+        }
+
+        Cliente clienteBuscado = clienteMediator.buscar(cpf);
+
+        if (clienteBuscado == null) { // !=
+            return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
+        }
+
+        double valorNecessarioEmPontos = pagamentoEmPontos * 20;
+
+        if (clienteBuscado.getSaldoPontos() < valorNecessarioEmPontos) {
+            return new ResultadoGeracaoBilhete(null, null, "Pontos insuficientes");
+        }
+
+        Bilhete bilhete = new Bilhete(clienteBuscado, vooBuscado, preco, pagamentoEmPontos, dataHora);
+
+        clienteBuscado.debitarPontos(valorNecessarioEmPontos);
+        clienteBuscado.creditarPontos(bilhete.obterValorPontuacao());
+
+        if(!bilheteDao.incluir(bilhete)) {
+            return new ResultadoGeracaoBilhete(null, null, "Bilhete ja existente");
+        }
+
+        String mensagem = clienteMediator.alterar(clienteBuscado);
+
+        if (mensagem != null) {
+            return new ResultadoGeracaoBilhete(null, null, mensagem);
+        }
+
+        return new ResultadoGeracaoBilhete(bilhete, null, null);
     }
 
     public ResultadoGeracaoBilhete gerarBilheteVip(String cpf, String ciaAerea, int numeroVoo, double
             preco, double pagamentoEmPontos, LocalDateTime dataHora, double bonusPontuacao) {
+
         String mensagemDeErro = validar(cpf, ciaAerea, numeroVoo, preco, pagamentoEmPontos, dataHora);
 
         if (mensagemDeErro != null) {
             return new ResultadoGeracaoBilhete(null, null, mensagemDeErro);
-        } else {
-            if(!(bonusPontuacao <= 0 || bonusPontuacao > 100)){
-                return new ResultadoGeracaoBilhete(null, null, "Bonus errado");
-            } else {
-                Voo voo = new Voo(null, null, ciaAerea, numeroVoo);
-                String idVoo = voo.obterIdVoo();
-                Voo vooObtido = vooMediator.buscar(idVoo);
-
-                if(vooObtido == null){
-                    return new ResultadoGeracaoBilhete(null, null, "Voo nao encontrado");
-                } else {
-                    Cliente clienteBuscado = clienteMediator.buscar(cpf);
-
-                    if(clienteBuscado == null){
-                        return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
-                    } else if(pagamentoEmPontos * 20 > clienteBuscado.getSaldoPontos()) {
-                        return new ResultadoGeracaoBilhete(null, null, "Pontos insuficientes");
-                    } else {
-                        BilheteVip bilheteVip = new BilheteVip(clienteBuscado, vooObtido, preco, pagamentoEmPontos, dataHora, bonusPontuacao);
-                        clienteBuscado.debitarPontos(pagamentoEmPontos * 20);
-                        clienteBuscado.creditarPontos(bilheteVip.obterValorPontuacaoVip());
-                        if(!bilheteVipDao.incluir(bilheteVip)) {
-                            return new ResultadoGeracaoBilhete(null, null, "Bilhete vip ja existente");
-                        } else {
-                            String resposta = clienteMediator.alterar(clienteBuscado);
-                            if(resposta != null) {
-                                return new ResultadoGeracaoBilhete(null, null, resposta);
-                            } else {
-                                return new ResultadoGeracaoBilhete(null, bilheteVip, null);
-                            }
-                        }
-                    }
-                }
-            }
         }
+
+        if (bonusPontuacao <= 0 || bonusPontuacao > 100) {
+            return new ResultadoGeracaoBilhete(null, null, "Bonus errado");
+        }
+
+        Voo voo = new Voo(null, null, ciaAerea, numeroVoo);
+        String idVoo = voo.obterIdVoo();
+        Voo vooBuscado = vooMediator.buscar(idVoo);
+
+        if (vooBuscado == null) { // !=
+            return new ResultadoGeracaoBilhete(null, null, "Voo nao encontrado");
+        }
+
+        Cliente clienteBuscado = clienteMediator.buscar(cpf);
+
+        if (clienteBuscado == null) { // !=
+            return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
+        }
+
+        double valorNecessarioEmPontos = pagamentoEmPontos * 20;
+
+        if (clienteBuscado.getSaldoPontos() < valorNecessarioEmPontos) {
+            return new ResultadoGeracaoBilhete(null, null, "Pontos insuficientes");
+        }
+
+        BilheteVip bilheteVip = new BilheteVip(clienteBuscado, vooBuscado, preco, pagamentoEmPontos, dataHora, bonusPontuacao);
+
+        clienteBuscado.debitarPontos(valorNecessarioEmPontos);
+        clienteBuscado.creditarPontos(bilheteVip.obterValorPontuacaoVip());
+
+        if(!bilheteDao.incluir(bilheteVip)) {
+            return new ResultadoGeracaoBilhete(null, null, "Bilhete vip ja existente");
+        }
+
+        String mensagem = clienteMediator.alterar(clienteBuscado);
+
+        if (mensagem != null) {
+            return new ResultadoGeracaoBilhete(null, null, mensagem);
+        }
+
+        return new ResultadoGeracaoBilhete(null, bilheteVip, null);
     }
 }

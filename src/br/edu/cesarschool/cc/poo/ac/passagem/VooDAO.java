@@ -10,9 +10,11 @@ public class VooDAO {
     private String obterIdUnico(Voo voo) {
         return voo.getCompanhiaAerea() + voo.getNumeroVoo();
     }
+
     public Voo buscar(String idVoo) {
         return (Voo)cadastro.buscar(idVoo);
     }
+
     public boolean incluir(Voo voo) {
         String idUnico = obterIdUnico(voo);
         Voo vo = buscar(idUnico);
