@@ -44,46 +44,49 @@ public class VooMediator {
             return "Aeroporto origem igual a aeroporto destino";
         }
 
-        return validarCiaNumero(voo.getCompanhiaAerea(), voo.getNumeroVoo());
+        String mensagem = validarCiaNumero(voo.getCompanhiaAerea(), voo.getNumeroVoo());
+
+        if (mensagem != null) {
+            return mensagem;
+        }
+        return null;
     }
 
     public String incluir(Voo voo) {
         String mensagem = validar(voo);
-
-        if (mensagem == null) {
-            if (!vooDao.incluir(voo)) {
-                return "Voo ja existente";
-            } else {
-                return null;
-            }
-        } else {
+        if (mensagem != null) {
             return mensagem;
+        }
+
+        if (vooDao.incluir(voo)) {
+            return null;
+        } else {
+            return "Voo ja existente";
         }
     }
 
     public String alterar(Voo voo) {
-        if (validar(voo) != null) {
-            return validar(voo);
-        } else {
-            boolean resposta = vooDao.alterar(voo);
+        String mensagem = validar(voo);
+        if (mensagem != null) {
+            return mensagem;
+        }
 
-            if (!resposta) {
-                return "Voo inexistente";
-            }
+        if (vooDao.alterar(voo)) {
             return null;
+        } else {
+            return "Voo inexistente";
         }
     }
 
     public String excluir(String idVoo) {
         if (StringUtils.isVaziaOuNula(idVoo)) {
             return "Id voo errado";
-        } else {
-            boolean resposta = vooDao.excluir(idVoo);
+        }
 
-            if (!resposta) {
-                return "Voo inexistente";
-            }
+        if (vooDao.excluir(idVoo)) {
             return null;
+        } else {
+            return "Voo inexistente";
         }
     }
 }

@@ -3,7 +3,7 @@ package br.edu.cesarschool.cc.poo.ac.passagem;
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 
 public class VooDAO {
-    private final CadastroObjetos cadastro = new CadastroObjetos(VooDAO.class);
+    private CadastroObjetos cadastro = new CadastroObjetos(VooDAO.class);
 
     VooDAO() {
     }
