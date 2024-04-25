@@ -3,7 +3,7 @@ package br.edu.cesarschool.cc.poo.ac.passagem;
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 
 public class BilheteDAO {
-    private final CadastroObjetos cadastro = new CadastroObjetos(BilheteDAO.class);
+    private CadastroObjetos cadastro = new CadastroObjetos(Bilhete.class);
 
     public BilheteDAO() {
 
@@ -22,7 +22,7 @@ public class BilheteDAO {
         String idUnico = obterIdUnico(bilhete);
         Bilhete bil = buscar(idUnico);
 
-        if (bil != null) {
+        if (bil == null) {
             cadastro.incluir(bilhete, idUnico);
             return true;
         }

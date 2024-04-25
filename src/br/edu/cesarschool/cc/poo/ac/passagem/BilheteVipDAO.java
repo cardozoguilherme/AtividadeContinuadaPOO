@@ -3,7 +3,7 @@ package br.edu.cesarschool.cc.poo.ac.passagem;
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 
 public class BilheteVipDAO {
-    private final CadastroObjetos cadastro = new CadastroObjetos(BilheteDAO.class);
+    private CadastroObjetos cadastro = new CadastroObjetos(BilheteVip.class);
 
     public BilheteVipDAO() {
 
@@ -22,8 +22,8 @@ public class BilheteVipDAO {
         String idUnico = obterIdUnico(bilheteVip);
         BilheteVip bilVip = buscar(idUnico);
 
-        if (bilVip != null) {
-            cadastro.incluir(bilVip, idUnico);
+        if (bilVip == null) {
+            cadastro.incluir(bilheteVip, idUnico);
             return true;
         }
         return false;
@@ -34,7 +34,7 @@ public class BilheteVipDAO {
         BilheteVip bilVip = buscar(idUnico);
 
         if (idUnico != null) {
-            cadastro.alterar(bilVip, idUnico);
+            cadastro.alterar(bilheteVip, idUnico);
             return true;
         }
         return false;
