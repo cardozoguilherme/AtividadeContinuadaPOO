@@ -80,5 +80,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="PersistenciaObjetos" level="project" />
   </component>
 </module>
