@@ -89,4 +89,9 @@ public class VooMediator {
             return "Voo inexistente";
         }
     }
+
+    // NEW!!!
+    public Voo[] buscarTodos() {
+        return vooDao.buscarTodos();
+    }
 }

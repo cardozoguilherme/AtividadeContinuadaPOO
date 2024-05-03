@@ -2,6 +2,8 @@ package br.edu.cesarschool.cc.poo.ac.passagem;
 
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 
+import java.io.Serializable;
+
 public class VooDAO {
     private CadastroObjetos cadastro = new CadastroObjetos(Voo.class);
 
@@ -44,4 +46,19 @@ public class VooDAO {
         return false;
     }
 
+    // NEW!!!
+    public Voo[] buscarTodos() {
+        Serializable[] res = cadastro.buscarTodos();
+        if (res == null) {
+            return null;
+        } else {
+            Voo[] voos = new Voo[res.length];
+            int i = 0;
+            for (Serializable reg : res) {
+                voos[i] = (Voo)reg;
+                i++;
+            }
+            return voos;
+        }
+    }
 }

@@ -43,4 +43,20 @@ public class ClienteDAO {
         }
         return false;
     }
+
+    // NEW!!!
+    public Cliente[] buscarTodos() {
+        Serializable[] res = cadastro.buscarTodos();
+        if (res == null) {
+            return null;
+        } else {
+            Cliente[] clientes = new Cliente[res.length];
+            int i = 0;
+            for (Serializable reg : res) {
+                clientes[i] = (Cliente)reg;
+                i++;
+            }
+            return clientes;
+        }
+    }
 }
