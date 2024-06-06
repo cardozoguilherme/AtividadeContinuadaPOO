@@ -1,50 +1,40 @@
 package br.edu.cesarschool.cc.poo.ac.passagem;
 
-import java.io.Serializable;
+import br.edu.cesarschool.cc.poo.ac.utils.SuperDAO;
+import br.edu.cesarschool.cc.poo.ac.utils.Registro;
 
-import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
+public class BilheteDAO extends SuperDAO {
 
-public class BilheteDAO {
-	private CadastroObjetos cadastro = new CadastroObjetos(Bilhete.class);
+	@Override
+	public Class<?> obterTipo() {
+		return Bilhete.class;
+	}
+
 	public Bilhete buscar(String numero) {
-		return (Bilhete)cadastro.buscar(numero);
+		return (Bilhete) daoGenerico.buscar(numero);
 	}
+
 	public boolean incluir(Bilhete bilhete) {
-		Bilhete cli = buscar(bilhete.gerarNumero());
-		if (cli == null) {
-			cadastro.incluir(bilhete, bilhete.gerarNumero());
-			return true;
-		} 
-		return false; 
+		return daoGenerico.incluir(bilhete);
 	}
+
 	public boolean alterar(Bilhete bilhete) {
-		Bilhete cli = buscar(bilhete.gerarNumero());
-		if (cli != null) {
-			cadastro.alterar(bilhete, bilhete.gerarNumero());
-			return true;
-		} 
-		return false; 
+		return daoGenerico.alterar(bilhete);
 	}
+
 	public boolean excluir(String numero) {
-		Bilhete cli = buscar(numero);
-		if (cli != null) {
-			cadastro.excluir(numero);
-			return true;
-		} 
-		return false; 
-	}	
+		return daoGenerico.excluir(numero);
+	}
+
 	public Bilhete[] buscarTodos() {
-		Serializable[] res = cadastro.buscarTodos();
-		if (res == null) {
+		Registro[] registros = daoGenerico.buscarTodos();
+		if (registros == null) {
 			return null;
-		} else {
-			Bilhete[] bilhetes = new Bilhete[res.length];
-			int i = 0;
-			for (Serializable reg : res) {
-				bilhetes[i] = (Bilhete)reg;
-				i++;
-			}
-			return bilhetes;
 		}
+		Bilhete[] bilhetes = new Bilhete[registros.length];
+		for (int i = 0; i < registros.length; i++) {
+			bilhetes[i] = (Bilhete) registros[i];
+		}
+		return bilhetes;
 	}
 }

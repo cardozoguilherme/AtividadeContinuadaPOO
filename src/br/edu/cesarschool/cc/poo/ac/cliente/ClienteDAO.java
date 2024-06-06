@@ -1,61 +1,40 @@
 package br.edu.cesarschool.cc.poo.ac.cliente;
 
-import java.io.Serializable;
-import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
+import br.edu.cesarschool.cc.poo.ac.utils.SuperDAO;
+import br.edu.cesarschool.cc.poo.ac.utils.Registro;
 
-public class ClienteDAO {
-	private CadastroObjetos cadastro = new CadastroObjetos(Cliente.class);
-	private String obterIdUnico(Cliente cliente) {
-		return cliente.getCpf();
+public class ClienteDAO extends SuperDAO {
+
+	@Override
+	public Class<?> obterTipo() {
+		return Cliente.class;
 	}
+
 	public Cliente buscar(String cpf) {
-		return (Cliente)cadastro.buscar(cpf);
-	}	
-	/*
-	 * Objetos são incluídos em arquivos físicos, gravados e
-	 * no diretório Cliente (o nome da classe de entidade), que fica
-	 * no mesmo nível do diretório src, dentro do projeto JAVA.
-	 * Cada objeto é incluído em um arquivo diferente, cujo nome 
-	 * é o id único do objeto em questão, e tem a extensão dat.   
-	 */
+		return (Cliente) daoGenerico.buscar(cpf);
+	}
+
 	public boolean incluir(Cliente cliente) {
-		String idUnico = obterIdUnico(cliente);
-		Cliente cli = buscar(idUnico);
-		if (cli == null) {
-			cadastro.incluir(cliente, idUnico);
-			return true;
-		} 
-		return false; 
+		return daoGenerico.incluir(cliente);
 	}
+
 	public boolean alterar(Cliente cliente) {
-		String idUnico = obterIdUnico(cliente);
-		Cliente cli = buscar(idUnico);
-		if (cli != null) {
-			cadastro.alterar(cliente, idUnico);
-			return true;
-		} 
-		return false;
+		return daoGenerico.alterar(cliente);
 	}
+
 	public boolean excluir(String cpf) {
-		Cliente cli = buscar(cpf);
-		if (cli != null) {
-			cadastro.excluir(cpf);
-			return true;
-		} 
-		return false; 
-	}	
+		return daoGenerico.excluir(cpf);
+	}
+
 	public Cliente[] buscarTodos() {
-		Serializable[] res = cadastro.buscarTodos();
-		if (res == null) {
+		Registro[] registros = daoGenerico.buscarTodos();
+		if (registros == null) {
 			return null;
-		} else {
-			Cliente[] clientes = new Cliente[res.length];
-			int i = 0;
-			for (Serializable reg : res) {
-				clientes[i] = (Cliente)reg;
-				i++;
-			}
-			return clientes;
 		}
+		Cliente[] clientes = new Cliente[registros.length];
+		for (int i = 0; i < registros.length; i++) {
+			clientes[i] = (Cliente) registros[i];
+		}
+		return clientes;
 	}
 }

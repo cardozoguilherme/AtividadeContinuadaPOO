@@ -1,50 +1,40 @@
 package br.edu.cesarschool.cc.poo.ac.passagem;
 
-import java.io.Serializable;
+import br.edu.cesarschool.cc.poo.ac.utils.SuperDAO;
+import br.edu.cesarschool.cc.poo.ac.utils.Registro;
 
-import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
+public class BilheteVipDAO extends SuperDAO {
 
-public class BilheteVipDAO {
-	private CadastroObjetos cadastro = new CadastroObjetos(BilheteVip.class);
-	public BilheteVip buscar(String cpf) {
-		return (BilheteVip)cadastro.buscar(cpf);
+	@Override
+	public Class<?> obterTipo() {
+		return BilheteVip.class;
 	}
+
+	public BilheteVip buscar(String numero) {
+		return (BilheteVip) daoGenerico.buscar(numero);
+	}
+
 	public boolean incluir(BilheteVip bilhete) {
-		BilheteVip cli = buscar(bilhete.gerarNumero());
-		if (cli == null) {
-			cadastro.incluir(bilhete, bilhete.gerarNumero());
-			return true;
-		} 
-		return false; 
+		return daoGenerico.incluir(bilhete);
 	}
+
 	public boolean alterar(BilheteVip bilhete) {
-		BilheteVip cli = buscar(bilhete.gerarNumero());
-		if (cli != null) {
-			cadastro.alterar(bilhete, bilhete.gerarNumero());
-			return true;
-		} 
-		return false; 
+		return daoGenerico.alterar(bilhete);
 	}
+
 	public boolean excluir(String numero) {
-		BilheteVip cli = buscar(numero);
-		if (cli != null) {
-			cadastro.excluir(numero);
-			return true;
-		} 
-		return false; 
-	}	
+		return daoGenerico.excluir(numero);
+	}
+
 	public BilheteVip[] buscarTodos() {
-		Serializable[] res = cadastro.buscarTodos();
-		if (res == null) {
+		Registro[] registros = daoGenerico.buscarTodos();
+		if (registros == null) {
 			return null;
-		} else {
-			BilheteVip[] bilhetes = new BilheteVip[res.length];
-			int i = 0;
-			for (Serializable reg : res) {
-				bilhetes[i] = (BilheteVip)reg;
-				i++;
-			}
-			return bilhetes;
 		}
+		BilheteVip[] bilhetes = new BilheteVip[registros.length];
+		for (int i = 0; i < registros.length; i++) {
+			bilhetes[i] = (BilheteVip) registros[i];
+		}
+		return bilhetes;
 	}
 }

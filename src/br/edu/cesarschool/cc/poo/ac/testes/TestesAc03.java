@@ -1,21 +1,22 @@
 package br.edu.cesarschool.cc.poo.ac.testes;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import br.edu.cesarschool.cc.poo.ac.passagem.Voo;
 import br.edu.cesarschool.cc.poo.ac.passagem.VooMediator;
+import br.edu.cesarschool.cc.poo.ac.utils.DiaDaSemana;
 import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
 
 public class TestesAc03 extends TesteGeral {
 	private static final String VOO_INEXISTENTE = "Voo inexistente";
-	private static final String PNZ = "PNZ";
-	private static final String VCP = "VCP";
+
 	private static final String CIA_AEREA_ERRADA = "CIA aerea errada";
 	private static final String AEROPORTO_DESTINO_ERRADO = "Aeroporto destino errado";
 	private static final String AEROPORTO_ORIGEM_ERRADO = "Aeroporto origem errado";
-	private VooMediator vooMed = VooMediator.obterInstancia();
-	private CadastroObjetos cadastroVoo = new CadastroObjetos(Voo.class);
 	
 	@Test
 	public void testCadVoo1() {		
@@ -50,11 +51,11 @@ public class TestesAc03 extends TesteGeral {
 	@Test
 	public void testCadVoo4() {		
 		excluirCadastros();
-		Voo voo = new Voo("SLZ", "BEL", "", 2255);
+		Voo voo = new Voo("SLZ", "BEL", "", 2255, DIAS, HORA);
 		Assertions.assertEquals(CIA_AEREA_ERRADA, vooMed.incluir(voo));
-		voo = new Voo("GIG", "VIX", null, 1122);
+		voo = new Voo("GIG", "VIX", null, 1122, DIAS, HORA);
 		Assertions.assertEquals(CIA_AEREA_ERRADA, vooMed.validar(voo));
-		voo = new Voo("SDU", "CGH", "JJA", 8745);
+		voo = new Voo("SDU", "CGH", "JJA", 8745, DIAS, HORA);
 		Assertions.assertEquals(CIA_AEREA_ERRADA, vooMed.alterar(voo));
 		Assertions.assertEquals("Numero voo errado", vooMed.validarCiaNumero("IU", 123456));	
 		Assertions.assertEquals(0, obterQtdArquivosDir(DIR_VOO));
@@ -64,9 +65,9 @@ public class TestesAc03 extends TesteGeral {
 		excluirCadastros();
 		String cia = "CZ";
 		int num = 3232;
-		Voo voo = new Voo("CNF", "SSA", cia, num);
+		Voo voo = new Voo("CNF", "SSA", cia, num, DIAS, HORA);
 		cadastroVoo.incluir(voo, voo.obterIdVoo());
-		Voo vooDup = new Voo("GYN", "FEN", cia, num);
+		Voo vooDup = new Voo("GYN", "FEN", cia, num, DIAS, HORA);
 		Assertions.assertEquals("Voo ja existente", vooMed.incluir(vooDup));
 		int qtdArqsVoo = obterQtdArquivosDir(DIR_VOO);		
 		Assertions.assertEquals(1, qtdArqsVoo);
@@ -78,9 +79,9 @@ public class TestesAc03 extends TesteGeral {
 	public void testCadVoo6() {
 		excluirCadastros();
 		String cia = "ZX";
-		Voo voo = new Voo("FLN", "RAO", cia, 6666);
+		Voo voo = new Voo("FLN", "RAO", cia, 6666, DIAS, HORA);
 		cadastroVoo.incluir(voo, voo.obterIdVoo());
-		Voo vooNew = new Voo("PMW", "CAU", cia, 6667);
+		Voo vooNew = new Voo("PMW", "CAU", cia, 6667, DIAS, HORA);
 		Assertions.assertEquals(null, vooMed.incluir(vooNew));
 		int qtdArqsVoo = obterQtdArquivosDir(DIR_VOO);		
 		Assertions.assertEquals(2, qtdArqsVoo);
@@ -93,9 +94,9 @@ public class TestesAc03 extends TesteGeral {
 	public void testCadVoo7() {
 		excluirCadastros();
 		String cia = "TW";		
-		Voo voo = new Voo("BVB", "PVH", cia, 8888);
+		Voo voo = new Voo("BVB", "PVH", cia, 8888, DIAS, HORA);
 		cadastroVoo.incluir(voo, voo.obterIdVoo());
-		Voo vooAlt = new Voo("RBR", "THE", cia, 8086);
+		Voo vooAlt = new Voo("RBR", "THE", cia, 8086, DIAS, HORA);
 		Assertions.assertEquals(VOO_INEXISTENTE, vooMed.alterar(vooAlt));
 		int qtdArqsVoo = obterQtdArquivosDir(DIR_VOO);		
 		Assertions.assertEquals(1, qtdArqsVoo);
@@ -108,9 +109,9 @@ public class TestesAc03 extends TesteGeral {
 		excluirCadastros();
 		String cia = "YP";
 		int num = 8088;
-		Voo voo = new Voo(VCP, PNZ, cia, num);
+		Voo voo = new Voo(VCP, PNZ, cia, num, DIAS, HORA);
 		cadastroVoo.incluir(voo, voo.obterIdVoo());
-		Voo vooAlt = new Voo("FOR", "SET", cia, num);
+		Voo vooAlt = new Voo("FOR", "SET", cia, num, DIAS, HORA);
 		Assertions.assertEquals(null, vooMed.alterar(vooAlt));
 		int qtdArqsVoo = obterQtdArquivosDir(DIR_VOO);		
 		Assertions.assertEquals(1, qtdArqsVoo);
@@ -160,5 +161,5 @@ public class TestesAc03 extends TesteGeral {
 		Voo vooOri = vooMed.buscar(idVoo);
 		Assertions.assertNotNull(vooOri);
 		Assertions.assertTrue(ComparadoraObjetosSerial.compareObjectsSerial(voo, vooOri));
-	}	
+	}
 }

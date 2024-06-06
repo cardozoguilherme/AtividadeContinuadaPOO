@@ -27,12 +27,11 @@ public class TestesAc04 extends TesteGeral {
 	private static final String CPF_ERRADO = "CPF errado";
 	private static final Cliente CLI1 = new Cliente(OUTRO_CPF_VALIDO, "MARIO", 100);
 	private static final Voo VOO1 = new Voo("REC", "GRU", "JJ", 1231);
-	private BilheteMediator biMed = BilheteMediator.obterInstancia();
+	
 	private CadastroObjetos cadastroBi = new CadastroObjetos(Bilhete.class);
 	private CadastroObjetos cadastroBiVip = new CadastroObjetos(BilheteVip.class);
 	private CadastroObjetos cadastroVoo = new CadastroObjetos(Voo.class);
-	private CadastroObjetos cadastroCli = new CadastroObjetos(Cliente.class);
-	
+		
 	@Test
 	public void testBilhete1() {
 		excluirCadastros();
@@ -123,13 +122,7 @@ public class TestesAc04 extends TesteGeral {
 	private void assertCiaAereaErrada(ResultadoGeracaoBilhete res) {
 		assertResErro(res, CIA_AEREA_ERRADA);
 	}
-	private void assertResErro(ResultadoGeracaoBilhete res, String msg) {
-		Assertions.assertNotNull(res);		
-		Assertions.assertNull(res.getBilhete());
-		Assertions.assertNull(res.getBilheteVip());
-		Assertions.assertNotNull(res.getMensagemErro());
-		Assertions.assertEquals(msg, res.getMensagemErro());
-	}
+
 	@Test
 	public void testBilhete6() {
 		excluirCadastros();
@@ -445,6 +438,5 @@ public class TestesAc04 extends TesteGeral {
 		Assertions.assertEquals(1, obterQtdArquivosDir(DIR_VOO));
 		Assertions.assertEquals(1, obterQtdArquivosDir(DIR_BILHETE));
 		Assertions.assertEquals(1, obterQtdArquivosDir(DIR_BILHETE_VIP));
-	}
-	
+	}	
 }

@@ -1,53 +1,40 @@
 package br.edu.cesarschool.cc.poo.ac.passagem;
 
-import java.io.Serializable;
+import br.edu.cesarschool.cc.poo.ac.utils.SuperDAO;
+import br.edu.cesarschool.cc.poo.ac.utils.Registro;
 
-import br.edu.cesarschool.next.oo.persistenciaobjetos.CadastroObjetos;
+public class VooDAO extends SuperDAO {
 
-public class VooDAO {
-	private CadastroObjetos cadastro = new CadastroObjetos(Voo.class);
+	@Override
+	public Class<?> obterTipo() {
+		return Voo.class;
+	}
+
 	public Voo buscar(String idVoo) {
-		return (Voo)cadastro.buscar(idVoo);
+		return (Voo) daoGenerico.buscar(idVoo);
 	}
-	private String obterIdUnicoVoo(Voo voo) {
-		return voo.getCompanhiaAerea() + voo.getNumeroVoo();
-	}
+
 	public boolean incluir(Voo voo) {
-		Voo cli = buscar(obterIdUnicoVoo(voo));
-		if (cli == null) {
-			cadastro.incluir(voo, obterIdUnicoVoo(voo));
-			return true;
-		} 
-		return false; 
+		return daoGenerico.incluir(voo);
 	}
+
 	public boolean alterar(Voo voo) {
-		Voo cli = buscar(obterIdUnicoVoo(voo));
-		if (cli != null) {
-			cadastro.alterar(voo, obterIdUnicoVoo(voo));
-			return true;
-		} 
-		return false; 
+		return daoGenerico.alterar(voo);
 	}
+
 	public boolean excluir(String idVoo) {
-		Voo cli = buscar(idVoo);
-		if (cli != null) {
-			cadastro.excluir(idVoo);
-			return true;
-		} 
-		return false; 
-	}	
+		return daoGenerico.excluir(idVoo);
+	}
+
 	public Voo[] buscarTodos() {
-		Serializable[] res = cadastro.buscarTodos();
-		if (res == null) {
+		Registro[] registros = daoGenerico.buscarTodos();
+		if (registros == null) {
 			return null;
-		} else {
-			Voo[] voos = new Voo[res.length];
-			int i = 0;
-			for (Serializable reg : res) {
-				voos[i] = (Voo)reg;
-				i++;
-			}
-			return voos;
 		}
+		Voo[] voos = new Voo[registros.length];
+		for (int i = 0; i < registros.length; i++) {
+			voos[i] = (Voo) registros[i];
+		}
+		return voos;
 	}
 }
