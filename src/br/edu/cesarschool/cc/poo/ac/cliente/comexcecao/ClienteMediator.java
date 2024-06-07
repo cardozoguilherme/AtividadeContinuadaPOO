@@ -20,13 +20,13 @@ public class ClienteMediator {
     public void validar(Cliente cliente) throws ExcecaoValidacao {
         ExcecaoValidacao excecaoValidacao = new ExcecaoValidacao();
         if (!ValidadorCPF.isCpfValido(cliente.getCpf())) {
-            excecaoValidacao.adicionarMensagem("CPF inválido");
+            excecaoValidacao.adicionarMensagem("CPF errado");
         }
-        if (cliente.getNome() == null || cliente.getNome().isEmpty()) {
-            excecaoValidacao.adicionarMensagem("Nome inválido");
+        if (cliente.getNome() == null || cliente.getNome().trim().isEmpty()) {
+            excecaoValidacao.adicionarMensagem("nome errado");
         }
         if (cliente.getSaldoPontos() < 0) {
-            excecaoValidacao.adicionarMensagem("Saldo de pontos inválido");
+            excecaoValidacao.adicionarMensagem("saldo errado");
         }
         if (!excecaoValidacao.getMensagens().isEmpty()) {
             throw excecaoValidacao;
@@ -34,25 +34,35 @@ public class ClienteMediator {
     }
 
     public Cliente buscar(String cpf) throws ExcecaoRegistroInexistente {
-        return clienteDAO.buscar(cpf);
+        Cliente cliente = clienteDAO.buscar(cpf);
+        if (cliente == null) {
+            throw new ExcecaoRegistroInexistente("Cliente inexistente");
+        }
+        return cliente;
     }
 
     public void incluir(Cliente cliente) throws ExcecaoRegistroJaExistente, ExcecaoValidacao {
         validar(cliente);
-        clienteDAO.incluir(cliente);
+        if (!clienteDAO.incluir(cliente)) {
+            throw new ExcecaoRegistroJaExistente("Cliente existente");
+        }
     }
 
     public void alterar(Cliente cliente) throws ExcecaoRegistroInexistente, ExcecaoValidacao {
         validar(cliente);
-        clienteDAO.alterar(cliente);
+        if (!clienteDAO.alterar(cliente)) {
+            throw new ExcecaoRegistroInexistente("Cliente inexistente");
+        }
     }
 
     public void excluir(String cpf) throws ExcecaoRegistroInexistente, ExcecaoValidacao {
         if (!ValidadorCPF.isCpfValido(cpf)) {
             ExcecaoValidacao excecaoValidacao = new ExcecaoValidacao();
-            excecaoValidacao.adicionarMensagem("CPF inválido");
+            excecaoValidacao.adicionarMensagem("CPF errado");
             throw excecaoValidacao;
         }
-        clienteDAO.excluir(cpf);
+        if (!clienteDAO.excluir(cpf)) {
+            throw new ExcecaoRegistroInexistente("Cliente inexistente");
+        }
     }
 }

@@ -14,29 +14,41 @@ public class ClienteDAO extends SuperDAO {
     public Cliente buscar(String cpf) throws ExcecaoRegistroInexistente {
         Cliente cliente = (Cliente) daoGenerico.buscar(cpf);
         if (cliente == null) {
-            throw new ExcecaoRegistroInexistente("Cliente não encontrado");
+            throw new ExcecaoRegistroInexistente("Cliente inexistente");
         }
         return cliente;
     }
 
-    public void incluir(Cliente cliente) throws ExcecaoRegistroJaExistente {
-        if (daoGenerico.buscar(cliente.getCpf()) != null) {
-            throw new ExcecaoRegistroJaExistente("Cliente já existe");
+    public boolean incluir(Cliente cliente) throws ExcecaoRegistroJaExistente {
+        if (!daoGenerico.incluir(cliente)) {
+            throw new ExcecaoRegistroJaExistente("Cliente existente");
         }
-        daoGenerico.incluir(cliente);
+        return true;
     }
 
-    public void alterar(Cliente cliente) throws ExcecaoRegistroInexistente {
-        if (daoGenerico.buscar(cliente.getCpf()) == null) {
-            throw new ExcecaoRegistroInexistente("Cliente não encontrado");
+    public boolean alterar(Cliente cliente) throws ExcecaoRegistroInexistente {
+        if (!daoGenerico.alterar(cliente)) {
+            throw new ExcecaoRegistroInexistente("Cliente inexistente");
         }
-        daoGenerico.alterar(cliente);
+        return true;
     }
 
-    public void excluir(String cpf) throws ExcecaoRegistroInexistente {
-        if (daoGenerico.buscar(cpf) == null) {
-            throw new ExcecaoRegistroInexistente("Cliente não encontrado");
+    public boolean excluir(String cpf) throws ExcecaoRegistroInexistente {
+        if (!daoGenerico.excluir(cpf)) {
+            throw new ExcecaoRegistroInexistente("Cliente inexistente");
         }
-        daoGenerico.excluir(cpf);
+        return true;
+    }
+
+    public Cliente[] buscarTodos() {
+        Registro[] registros = daoGenerico.buscarTodos();
+        if (registros == null) {
+            return null;
+        }
+        Cliente[] clientes = new Cliente[registros.length];
+        for (int i = 0; i < registros.length; i++) {
+            clientes[i] = (Cliente) registros[i];
+        }
+        return clientes;
     }
 }

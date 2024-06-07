@@ -57,7 +57,7 @@ public class BilheteMediator {
 			return "Preco menor que pagamento em pontos";
 		}
 		if (dataHora == null || LocalDateTime.now().plusHours(1).isAfter(dataHora)) {
-			return "Data hora invalida";
+			return "data hora invalida";
 		}
 
 		Voo voo = vooMediator.buscar(ciaAerea + numeroVoo);
@@ -96,7 +96,7 @@ public class BilheteMediator {
 		Voo voo = vooMediator.buscar(ciaAerea + numeroVoo);
 		Cliente cliente = clienteMediator.buscar(cpf);
 		if (cliente == null) {
-			return new ResultadoGeracaoBilhete(null, null, "Cliente não encontrado");
+			return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
 		}
 
 		double pontosNecessarios = pagamentoEmPontos * 20;
@@ -108,11 +108,11 @@ public class BilheteMediator {
 		cliente.debitarPontos(pontosNecessarios);
 		cliente.creditarPontos(bilhete.obterValorPontuacao());
 		if (!bilheteDao.incluir(bilhete)) {
-			return new ResultadoGeracaoBilhete(null, null, "Bilhete já existente");
+			return new ResultadoGeracaoBilhete(null, null, "Bilhete ja existente");
 		}
-		msg = String.valueOf(clienteMediator.alterar(cliente));
-		if (msg != null) {
-			return new ResultadoGeracaoBilhete(null, null, msg);
+		String alteracaoMsg = clienteMediator.alterar(cliente);
+		if (alteracaoMsg != null) {
+			return new ResultadoGeracaoBilhete(null, null, alteracaoMsg);
 		}
 		return new ResultadoGeracaoBilhete(bilhete, null, null);
 	}
@@ -125,7 +125,7 @@ public class BilheteMediator {
 		Voo voo = vooMediator.buscar(ciaAerea + numeroVoo);
 		Cliente cliente = clienteMediator.buscar(cpf);
 		if (cliente == null) {
-			return new ResultadoGeracaoBilhete(null, null, "Cliente não encontrado");
+			return new ResultadoGeracaoBilhete(null, null, "Cliente nao encontrado");
 		}
 
 		double pontosNecessarios = pagamentoEmPontos * 20;
@@ -137,11 +137,11 @@ public class BilheteMediator {
 		cliente.debitarPontos(pontosNecessarios);
 		cliente.creditarPontos(bilheteVip.obterValorPontuacaoVip());
 		if (!bilheteVipDao.incluir(bilheteVip)) {
-			return new ResultadoGeracaoBilhete(null, null, "Bilhete já existente");
+			return new ResultadoGeracaoBilhete(null, null, "Bilhete ja existente");
 		}
-		msg = String.valueOf(clienteMediator.alterar(cliente));
-		if (msg != null) {
-			return new ResultadoGeracaoBilhete(null, null, msg);
+		String alteracaoMsg = clienteMediator.alterar(cliente);
+		if (alteracaoMsg != null) {
+			return new ResultadoGeracaoBilhete(null, null, alteracaoMsg);
 		}
 		return new ResultadoGeracaoBilhete(null, bilheteVip, null);
 	}
@@ -158,9 +158,9 @@ public class BilheteMediator {
 		Bilhete[] bilhetes = bilheteDao.buscarTodos();
 		if (bilhetes != null) {
 			bilhetes = Arrays.stream(bilhetes)
-					.filter(b -> b.getPreco() <= precoMin)
+					.filter(b -> b.getPreco() >= precoMin)
 					.toArray(Bilhete[]::new);
-			Ordenadora.ordenar(bilhetes, new ComparadorBilheteDataHora());
+			Arrays.sort(bilhetes, (b1, b2) -> b2.getDataHora().compareTo(b1.getDataHora()));
 		}
 		return bilhetes;
 	}

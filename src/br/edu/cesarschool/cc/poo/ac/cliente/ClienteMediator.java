@@ -21,7 +21,7 @@ public class ClienteMediator {
 		if (!ValidadorCPF.isCpfValido(cliente.getCpf())) {
 			return "CPF errado";
 		}
-		if (cliente.getNome() == null || cliente.getNome().isEmpty()) {
+		if (cliente.getNome() == null || cliente.getNome().trim().isEmpty() || cliente.getNome().length() < 2) {
 			return "nome errado";
 		}
 		if (cliente.getSaldoPontos() < 0) {
@@ -39,7 +39,7 @@ public class ClienteMediator {
 		if (validacao != null) {
 			return validacao;
 		}
-		return clienteDAO.incluir(cliente) ? null : "Cliente já existente";
+		return clienteDAO.incluir(cliente) ? null : "Cliente ja existente";
 	}
 
 	public String alterar(Cliente cliente) {

@@ -7,14 +7,14 @@ public class ExcecaoValidacao extends Exception {
     private List<String> mensagens;
 
     public ExcecaoValidacao() {
-        this.mensagens = new ArrayList<>();
-    }
-
-    public List<String> getMensagens() {
-        return mensagens;
+        mensagens = new ArrayList<>();
     }
 
     public void adicionarMensagem(String mensagem) {
         mensagens.add(mensagem);
+    }
+
+    public List<String> getMensagens() {
+        return mensagens;
     }
 }
